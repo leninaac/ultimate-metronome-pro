@@ -378,7 +378,7 @@ class MetronomePage extends StatelessWidget {
                                 firstTabTitle: 'Cronômetro',
                                 secondTabTitle: 'Timer',
                                 firstTabContent: Padding(
-                                  padding: EdgeInsets.all(paddingHorizontal),
+                                  padding: EdgeInsets.only(top: paddingHorizontal, left: paddingHorizontal, right: paddingHorizontal),
                                   child: Column(
                                     children: [
                                       Observer(
