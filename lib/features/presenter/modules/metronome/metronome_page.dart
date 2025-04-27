@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:ultimate_metronome_pro/consts/musical_signatures/app_musical_signatures.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/metronome/metronome_controller.dart';
+import 'package:ultimate_metronome_pro/features/presenter/widgets/bottom_sheet/custom_bottom_sheet_widget.dart';
+import 'package:ultimate_metronome_pro/features/presenter/widgets/list_wheel_scroll_view/multiple_list_wheel_scroll_view_widget.dart';
 import 'package:ultimate_metronome_pro/features/presenter/widgets/tabbars/custom_tab_bar_widget.dart';
 
+import '../../../../consts/musical_signatures/time_signatures/app_time_signatures.dart';
 import '../../../../design_system/colors/app_colors.dart';
 import '../../../../design_system/painters/circle_stroke_geometric_shape_painter.dart';
 import '../../../../design_system/typography/app_fonts.dart';
 import '../../widgets/alert_dialogs/custom_alert_dialog_widget.dart';
+import '../../widgets/list_wheel_scroll_view/custom_list_wheel_scroll_view_widget.dart';
+import '../timer/timer_controller.dart';
 
-class MetronomePage extends StatefulWidget {
+class MetronomePage extends StatelessWidget {
   const MetronomePage({super.key});
 
   @override
-  State<MetronomePage> createState() => _MetronomePageState();
-}
-
-class _MetronomePageState extends State<MetronomePage> with SingleTickerProviderStateMixin {
-  @override
   Widget build(BuildContext context) {
     final controller = Modular.get<MetronomeController>();
+    final timerController = Modular.get<TimerController>();
     controller.preloadAudio();
 
     double screenWidth = MediaQuery.of(context).size.width;
@@ -32,18 +34,29 @@ class _MetronomePageState extends State<MetronomePage> with SingleTickerProvider
     final FixedExtentScrollController numeratorController = FixedExtentScrollController(
       initialItem: controller.numerator - 1,
     ); // Subtraímos 1 porque o índice começa em 0
+
     final FixedExtentScrollController denominatorController = FixedExtentScrollController(
-      initialItem: [1, 2, 4, 8,].indexOf(controller.denominator), // Busca o índice do denominador na lista
+      initialItem: AppMusicalSignatures.kAppDenominatorMusicalSignature.indexOf(controller.denominator),
     );
 
     final FixedExtentScrollController subdivisonController = FixedExtentScrollController(
-      initialItem: [1, 2, 4, 8,].indexOf(controller.subdivision), // Busca o índice do denominador na lista
+      initialItem: [1, 2, 4, 8].indexOf(controller.subdivision), // Busca o índice do denominador na lista
+    );
+
+    final FixedExtentScrollController hourController = FixedExtentScrollController(
+      initialItem: List.generate(23, (index) => index + 1).indexOf(timerController.stopwatchHours),
+    );
+
+    final FixedExtentScrollController minutesController = FixedExtentScrollController(
+      initialItem: List.generate(60, (index) => index).indexOf(timerController.stopwatchMinutes),
+    );
+
+    final FixedExtentScrollController secondsController = FixedExtentScrollController(
+      initialItem: List.generate(60, (index) => index).indexOf(timerController.stopwatchSeconds),
     );
 
     final FocusNode focusNode = FocusNode();
-    final TextEditingController bpmController = TextEditingController(
-      text: controller.bpm.toString(),
-    );
+    final TextEditingController bpmController = TextEditingController(text: controller.bpm.toString());
 
     return Scaffold(
       backgroundColor: AppColors.darkCharcoalColor,
@@ -53,11 +66,7 @@ class _MetronomePageState extends State<MetronomePage> with SingleTickerProvider
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(
-                top: paddingVertical,
-                right: paddingHorizontal,
-                left: paddingHorizontal,
-              ),
+              padding: EdgeInsets.only(top: paddingVertical, right: paddingHorizontal, left: paddingHorizontal),
               child: Observer(
                 builder: (context) {
                   // Calcula o tamanho do ícone com base na largura disponível
@@ -85,11 +94,7 @@ class _MetronomePageState extends State<MetronomePage> with SingleTickerProvider
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                top: paddingVertical,
-                right: paddingHorizontal,
-                left: paddingHorizontal,
-              ),
+              padding: EdgeInsets.only(top: paddingVertical, right: paddingHorizontal, left: paddingHorizontal),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -98,60 +103,31 @@ class _MetronomePageState extends State<MetronomePage> with SingleTickerProvider
                         () => showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return CustomAlertDialog.twoItensInARow(
+                            return CustomAlertDialog(
                               title: 'Escolha Valores',
-                              separator: '/',
+                              content: MultipleListWheelScrollViewWidget.twoWheelsWithSeparator(
+                                firstController: numeratorController,
+                                secondController: denominatorController,
+                                firstItems: AppMusicalSignatures.kAppNumeratorMusicalSignature,
+                                secondItems: AppMusicalSignatures.kAppDenominatorMusicalSignature,
+                                onFirstSelectedItemChanged: (index) {
+                                  controller.setNumerator(AppMusicalSignatures.kAppNumeratorMusicalSignature[index]);
+                                  debugPrint("Item atual da primeira coluna: ${controller.numerator}");
+                                },
+                                onSecondSelectedItemChanged: (index) {
+                                  controller.setDenominator(
+                                    AppMusicalSignatures.kAppDenominatorMusicalSignature[index],
+                                  );
+                                  debugPrint("Item atual da segunda coluna: ${controller.denominator}");
+                                },
+                                separator: '/',
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.of(context).pop(),
                                   child: Text("Fechar", style: TextStyle(color: Colors.white)),
                                 ),
                               ],
-                              firstNumeratorController: numeratorController,
-                              secondNumeratorController: denominatorController,
-                              onFirstSelectedItemChanged: (index) {
-                                controller.setNumerator(index + 1);
-
-                                debugPrint("Item atual da primeira coluna: ${index + 1}");
-                              },
-                              onSecondSelectedItemChanged: (index){
-                                final values = [1, 2, 4, 8];
-                                controller.setDenominator(values[index]);
-
-                                debugPrint("Item atual da segunda coluna: $index");
-                              },
-                              firstChildDelegate: ListWheelChildBuilderDelegate(
-                                builder: (context, index) {
-                                  if (index < 16) {
-                                    return Center(
-                                      child: Text(
-                                        '${index + 1}',
-                                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                                      ),
-                                    );
-                                  }
-                                  return null;
-                                },
-                                childCount: 16,
-                              ),
-                              secondChildDelegate: ListWheelChildBuilderDelegate(
-                                  builder: (context, index){
-                                    final values = [1, 2, 4, 8];
-                                    if(index < values.length){
-                                      return Center(
-                                        child: Text(
-                                          '${values[index]}',
-                                          style: TextStyle(
-                                            fontSize: 20, // Tamanho maior para destaque
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                    return null;
-                                  },
-                                childCount: 4,
-                              ),
                             );
                           },
                         ),
@@ -179,45 +155,31 @@ class _MetronomePageState extends State<MetronomePage> with SingleTickerProvider
                     ),
                   ),
                   OutlinedButton(
-                    onPressed: () => showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return CustomAlertDialog.oneItensInARow(
-                            title: 'Subdivisão',
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.of(context).pop(),
-                                child: Text("Pronto", style: TextStyle(color: Colors.white)),
-                              ),
-                            ],
-                            numeratorController: subdivisonController,
-                            onSelectedItemChanged: (index){
-                              final values = [1, 2, 4, 8];
-                              controller.setSubdivision(values[index]);
-
-                              debugPrint("Item atual da subdivisão: $index");
-                            },
-                            childDelegate: ListWheelChildBuilderDelegate(
-                              builder: (context, index){
-                                final values = [1, 2, 4, 8];
-                                if(index < values.length){
-                                  return Center(
-                                    child: Text(
-                                      '${values[index]}',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
+                    onPressed:
+                        () => showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return CustomAlertDialog(
+                              title: 'Subdivisão',
+                              content: CustomListWheelScrollViewWidget(
+                                controller: subdivisonController,
+                                onSelectedItemChanged: (index) {
+                                  controller.setSubdivision(
+                                    AppMusicalSignatures.kAppSubdivisionMusicalSignature[index],
                                   );
-                                }
-                                return null;
-                              },
-                              childCount: 4,
-                            ),
-                        );
-                      }
-                    ),
+                                  debugPrint("Item atual da subdivisão: ${controller.subdivision}");
+                                },
+                                items: AppMusicalSignatures.kAppSubdivisionMusicalSignature,
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.of(context).pop(),
+                                  child: Text("Fechar", style: TextStyle(color: Colors.white)),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5), // Bordas arredondadas de 5
@@ -241,11 +203,7 @@ class _MetronomePageState extends State<MetronomePage> with SingleTickerProvider
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                top: paddingVertical,
-                left: paddingHorizontal,
-                right: paddingHorizontal,
-              ),
+              padding: EdgeInsets.only(top: paddingVertical, left: paddingHorizontal, right: paddingHorizontal),
               child: GestureDetector(
                 onTap: () {
                   focusNode.requestFocus();
@@ -338,9 +296,7 @@ class _MetronomePageState extends State<MetronomePage> with SingleTickerProvider
                             // Divisores à esquerda do thumb
                             inactiveTickMarkColor: Colors.white,
                             // Divisores à direita do thumb
-                            thumbShape: RoundSliderThumbShape(
-                              enabledThumbRadius: screenWidth * 0.03,
-                            ),
+                            thumbShape: RoundSliderThumbShape(enabledThumbRadius: screenWidth * 0.03),
                             trackShape: RoundedRectSliderTrackShape(),
                             trackHeight: screenWidth * 0.01,
                           ),
@@ -403,32 +359,257 @@ class _MetronomePageState extends State<MetronomePage> with SingleTickerProvider
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                top: paddingVertical,
-                left: paddingHorizontal,
-                right: paddingHorizontal,
-              ),
+              padding: EdgeInsets.only(top: paddingVertical, left: paddingHorizontal, right: paddingHorizontal),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     icon: Icon(Icons.timer_outlined, color: Colors.white, size: screenWidth * 0.1),
-                    onPressed: () => showDialog(
-                        context: context,
-                      builder: (BuildContext context) {
-                          return CustomAlertDialog(
-                              title: 'Cronômetro',
+                    onPressed:
+                        () => showModalBottomSheet(
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          context: context,
+                          builder: (context) {
+                            return CustomBottomSheetWidget(
                               content: CustomTabBarWidget(
-                                tabController: TabController(length: 2, vsync: this, initialIndex: 0),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.of(context).pop(),
-                                  child: Text("Pronto", style: TextStyle(color: Colors.white)),
+                                title: 'Cronômetro',
+                                tabLength: 2,
+                                firstTabTitle: 'Cronômetro',
+                                secondTabTitle: 'Timer',
+                                firstTabContent: Padding(
+                                  padding: EdgeInsets.all(paddingHorizontal),
+                                  child: Column(
+                                    children: [
+                                      Observer(
+                                        builder: (context) {
+                                          return SizedBox(
+                                            width: screenWidth,
+                                            child: Text(
+                                              '${timerController.stopwatchMinutes.toString().padLeft(2, '0')}:${timerController.stopwatchSeconds.toString().padLeft(2, '0')},${(timerController.milliseconds ~/ 10).toString().padLeft(2, '0')}',
+                                              style: TextStyle(
+                                                fontFamily: AppFonts.modernSansFont,
+                                                fontSize: screenWidth * 0.15, // Tamanho do texto
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                timerController.resetStopwatch();
+                                              },
+                                              style: OutlinedButton.styleFrom(
+                                                backgroundColor: Colors.black,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5),
+                                                ),
+                                                minimumSize: Size(screenWidth * 0.15, screenWidth * 0.15),
+                                                padding: EdgeInsets.zero,
+                                              ),
+                                              child: Icon(Icons.stop, color: Colors.white, size: screenWidth * 0.1),
+                                            ),
+                                          ),
+                                          SizedBox(width: paddingHorizontal),
+                                          Expanded(
+                                            child: Observer(
+                                              builder: (context) {
+                                                return ElevatedButton(
+                                                  onPressed: () {
+                                                    if (!timerController.isStopwatchRunning) {
+                                                      timerController.startStopwatch();
+                                                    } else {
+                                                      timerController.pauseStopwatch();
+                                                    }
+                                                  },
+                                                  style: OutlinedButton.styleFrom(
+                                                    backgroundColor: Colors.black,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(
+                                                        5,
+                                                      ),
+                                                    ),
+                                                    minimumSize: Size(screenWidth * 0.15, screenWidth * 0.15),
+                                                    padding: EdgeInsets.zero,
+                                                  ),
+                                                  child: Icon(
+                                                    !timerController.isStopwatchRunning
+                                                        ? Icons.play_arrow
+                                                        : Icons.pause,
+                                                    color: Colors.white,
+                                                    size: screenWidth * 0.1,
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
+                                secondTabContent: Padding(
+                                  padding: EdgeInsets.all(paddingHorizontal),
+                                  child: Column(
+                                    children: [
+                                      Expanded(
+                                        child: MultipleListWheelScrollViewWidget.threeWheelsWithSeparator(
+                                          firstController: hourController,
+                                          secondController: minutesController,
+                                          thirdController: secondsController,
+                                          firstItems: AppTimeSignatures.kAppHourTimeSignature,
+                                          secondItems: AppTimeSignatures.kAppMinutesTimeSignature,
+                                          thirdItems: AppTimeSignatures.kAppSecondsTimeSignature,
+                                          onFirstSelectedItemChanged: (index) {
+                                            timerController.setCountdownHours(AppTimeSignatures.kAppHourTimeSignature[index]);
+                                            debugPrint("Item atual da hora: ${timerController.countdownHours}");
+                                          },
+                                          onSecondSelectedItemChanged: (index) {
+                                            timerController.setCountdownMinutes(
+                                              AppTimeSignatures.kAppMinutesTimeSignature[index],
+                                            );
+                                            debugPrint("Item atual dos minutos: ${timerController.countdownMinutes}");
+                                          },
+                                          onThirdSelectedItemChanged: (index) {
+                                            timerController.setCountdownSeconds(
+                                              AppTimeSignatures.kAppSecondsTimeSignature[index],
+                                            );
+                                            debugPrint("Item atual dos segundos: ${timerController.countdownSeconds}");
+                                          },
+                                          firstSeparator: ':',
+                                          secondSeparator: ':',
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                timerController.resetCountdownTimer();
+                                              },
+                                              style: OutlinedButton.styleFrom(
+                                                backgroundColor: Colors.black,
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(5), // Bordas arredondadas de 5
+                                                ),
+                                                minimumSize: Size(screenWidth * 0.15, screenWidth * 0.15),
+                                                // Define largura e altura iguais
+                                                padding: EdgeInsets.zero, // Remove o preenchimento adicional
+                                              ),
+                                              child: Icon(Icons.stop, color: Colors.white, size: screenWidth * 0.1),
+                                            ),
+                                          ),
+                                          SizedBox(width: paddingHorizontal),
+                                          Expanded(
+                                            child: Observer(
+                                              builder: (context) {
+                                                return ElevatedButton(
+                                                  onPressed: () {
+                                                    if (!timerController.isCountdownRunning) {
+                                                      controller.startMetronome();
+                                                      timerController.startCountdownTimer(controller);
+                                                    } else {
+                                                      controller.stopMetronome();
+                                                      timerController.pauseCountdownTimer();
+                                                    }
+                                                    Navigator.pop(context);
+                                                  },
+                                                  style: OutlinedButton.styleFrom(
+                                                    backgroundColor: Colors.black,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(
+                                                        5,
+                                                      ), // Bordas arredondadas de 5
+                                                    ),
+                                                    minimumSize: Size(screenWidth * 0.15, screenWidth * 0.15),
+                                                    // Define largura e altura iguais
+                                                    padding: EdgeInsets.zero, // Remove o preenchimento adicional
+                                                  ),
+                                                  child: Icon(
+                                                    !timerController.isCountdownRunning
+                                                        ? Icons.play_arrow
+                                                        : Icons.pause,
+                                                    color: Colors.white,
+                                                    size: screenWidth * 0.1,
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                  ),
+                  Row(
+                    children: [
+                      Observer(
+                        builder: (context) {
+                          String timerStr = '00:00:00';
+                          if(timerController.isCountdownRunning && !timerController.isStopwatchRunning) {
+                            final hoursStr = timerController.countdownHours.toString().padLeft(2, '0');
+                            final minutesStr = timerController.countdownMinutes.toString().padLeft(2, '0');
+                            final secondsStr = timerController.countdownSeconds.toString().padLeft(2, '0');
+                            timerStr = '$hoursStr:$minutesStr:$secondsStr';
+                          } else  if(!timerController.isCountdownRunning && timerController.isStopwatchRunning) {
+                            final hoursStr = timerController.stopwatchHours.toString().padLeft(2, '0');
+                            final minutesStr = timerController.stopwatchMinutes.toString().padLeft(2, '0');
+                            final secondsStr = timerController.stopwatchSeconds.toString().padLeft(2, '0');
+                            timerStr = '$hoursStr:$minutesStr:$secondsStr';
+                          }
+
+                          return Text(
+                            timerStr,
+                            style: TextStyle(
+                              fontFamily: AppFonts.modernSansFont,
+                              fontSize: screenWidth * 0.07, // Tamanho do texto
+                              fontWeight: FontWeight.w400,
+                              color: Colors.white,
+                            ),
                           );
-                      }),
+                        },
+                      ),
+                      SizedBox(width: paddingHorizontal),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Observer(
+                            builder: (context) {
+                              return IconButton(
+                                icon: Icon(!timerController.isCountdownRunning
+                                    ? Icons.play_arrow
+                                    : Icons.pause, color: Colors.white, size: screenWidth * 0.1),
+                                onPressed: () {
+                                  if (!timerController.isCountdownRunning) {
+                                    controller.startMetronome();
+                                    timerController.startCountdownTimer(controller);
+                                  } else {
+                                    timerController.pauseCountdownTimer();
+                                    controller.stopMetronome();
+                                  }
+                                }
+                              );
+                            }
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.stop, color: Colors.white, size: screenWidth * 0.1),
+                            onPressed: () => timerController.resetCountdownTimer(),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),

@@ -12,33 +12,21 @@ class MetronomeController = MetronomeControllerAbstract with _$MetronomeControll
 abstract class MetronomeControllerAbstract with Store {
   @observable
   int bpm = 60;
-
   Timer? metronomeTimer;
-
   @observable
   bool metronomeIsRunning = false;
-
   @observable
   int audioTickPosition = 1;
-
   @observable
   int visualTickPosition = 0;
-
   @observable
   double sliderValue = 60;
-
   @observable
   int numerator = 4;
-
   @observable
   int denominator = 4;
-
   @observable
   int subdivision = 4;
-
-  @observable
-  String timerType = 'Indefinido';
-
   final AudioPlayer audioPlayer = AudioPlayer();
 
   @computed
@@ -112,14 +100,4 @@ abstract class MetronomeControllerAbstract with Store {
     visualTickPosition > numerator ? visualTickPosition = 1 : visualTickPosition;
     audioTickPosition > numerator ? audioTickPosition = 1 : audioTickPosition;
   }
-
-  @action
-  void setTimerType(String type) {
-    timerType = type;
-    debugPrint('Tipo de cronômetro atualizado para: $timerType');
-  }
-
-
-
-
 }

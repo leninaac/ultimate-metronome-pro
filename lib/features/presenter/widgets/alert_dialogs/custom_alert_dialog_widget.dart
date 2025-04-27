@@ -21,7 +21,7 @@ class CustomAlertDialog extends StatelessWidget {
       backgroundColor: AppColors.darkCharcoalColor,
       title: Text(title, style: TextStyle(color: Colors.white)),
       content: SizedBox(
-        height: 80,
+        height: 200,
         width: 400,
         child: Container(
           decoration: BoxDecoration(
@@ -86,7 +86,7 @@ class CustomAlertDialog extends StatelessWidget {
     );
   }
 
-  factory CustomAlertDialog.twoItensInARow({
+  factory CustomAlertDialog.twoItemsInARow({
     Key? key,
     required String title,
     required String separator,
@@ -156,6 +156,19 @@ class CustomAlertDialog extends StatelessWidget {
     );
   }
 
+  factory CustomAlertDialog.threeItemsInARow({
+    Key? key,
+    required String title,
+    required List<Widget> actions,
+    required Widget content,
+  }) {
+    return CustomAlertDialog(
+      key: key,
+      title: title,
+      content: content,
+      actions: actions,
+    );
+  }
 
 
 }

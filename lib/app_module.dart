@@ -3,6 +3,7 @@ import 'package:ultimate_metronome_pro/consts/routes/app_routes.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/home/home_page.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/metronome/metronome_controller.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/metronome/metronome_page.dart';
+import 'package:ultimate_metronome_pro/features/presenter/modules/timer/timer_controller.dart';
 
 
 class AppModule extends Module {
@@ -14,6 +15,7 @@ void binds(Injector i) {
     i.addLazySingleton<MetronomeController>(MetronomeController.new);
 
     ///COUNTDOWN BINDS
+    i.addLazySingleton<TimerController>(TimerController.new);
 
     ///TAP TEMPO BINDS
   }

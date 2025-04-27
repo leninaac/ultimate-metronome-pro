@@ -35,7 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   flutter_modular: ^6.3.4
-  flutter_svg: ^2.0.17
+  flutter_svg: ^2.1.0
   mobx: ^2.5.0
   flutter_mobx: ^2.3.0
   shared_preferences: ^2.5.3

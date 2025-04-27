@@ -28,5 +28,8 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSUserNotificationCenterUsageDescription</key>
+    <string>Este aplicativo deseja enviar notificações.</string>
+
 </dict>
 </plist>

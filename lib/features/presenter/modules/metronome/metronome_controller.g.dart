@@ -145,22 +145,6 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
     });
   }
 
-  late final _$timerTypeAtom =
-      Atom(name: 'MetronomeControllerAbstract.timerType', context: context);
-
-  @override
-  String get timerType {
-    _$timerTypeAtom.reportRead();
-    return super.timerType;
-  }
-
-  @override
-  set timerType(String value) {
-    _$timerTypeAtom.reportWrite(value, super.timerType, () {
-      super.timerType = value;
-    });
-  }
-
   late final _$MetronomeControllerAbstractActionController =
       ActionController(name: 'MetronomeControllerAbstract', context: context);
 
@@ -231,17 +215,6 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   @override
-  void setTimerType(String type) {
-    final _$actionInfo = _$MetronomeControllerAbstractActionController
-        .startAction(name: 'MetronomeControllerAbstract.setTimerType');
-    try {
-      return super.setTimerType(type);
-    } finally {
-      _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
   String toString() {
     return '''
 bpm: ${bpm},
@@ -252,7 +225,6 @@ sliderValue: ${sliderValue},
 numerator: ${numerator},
 denominator: ${denominator},
 subdivision: ${subdivision},
-timerType: ${timerType},
 timeSignature: ${timeSignature}
     ''';
   }

@@ -11,6 +11,14 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+*sync/
+.sconsign.dblite
+.tags*
 
 # IntelliJ related
 *.iml
@@ -18,10 +26,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# The .vscode folder contains launch configuration and tasks you configure in
-# VS Code which you may wish to be included in version control, so this line
-# is commented out by default.
-#.vscode/
+# VSCode
+.vscode/
 
 # Flutter/Dart/Pub related
 **/doc/api/
@@ -31,15 +37,61 @@ migrate_working_dir/
 .flutter-plugins-dependencies
 .pub-cache/
 .pub/
-/build/
+build/
+flutter_*.png
+linked_*.ds
+unlinked.ds
+unlinked_spec.ds
 
-# Symbolication related
+# Android
+android/.gradle/
+android/app/build/
+android/app/outputs/
+android/build/
+android/.cxx/
+android/local.properties
+#Keystore
+android/key.properties
+*.jks
+
+# iOS
+ios/build/
+ios/Pods/
+ios/.symlinks/
+ios/Runner.xcworkspace/xcuserdata/
+ios/DerivedData/
+#Cocoapods
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/app.flx
+**/ios/Flutter/app.zip
+**/ios/Flutter/flutter_assets
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/ServiceDefinitions.json
+**/ios/Runner/GeneratedPluginRegistrant.*
+
+# macOS
+macos/build/
+macos/Pods/
+macos/.symlinks/
+macos/*.xcodeproj/xcuserdata/
+macos/DerivedData/
+#Cocoapods
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/macos/Flutter/Flutter-Debug.xcconfig
+**/macos/Flutter/Flutter-Release.xcconfig
+
+# Symbolication/Obfuscation
 app.*.symbols
-
-# Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# Exceptions (Keep these files, even if they match a previous rule)
+!ios/Podfile
+!ios/Podfile.lock
+!macos/Podfile
+!macos/Podfile.lock
+!android/gradlew
+!android/gradlew.bat
+

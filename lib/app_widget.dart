@@ -6,6 +6,7 @@ class AppWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp.router(
       title: 'Metrônomo',
       debugShowCheckedModeBanner: false,
