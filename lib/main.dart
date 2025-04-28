@@ -7,8 +7,6 @@ import 'app_widget.dart';
 import 'features/presenter/widgets/errors/flutter_error_widget.dart';
 
 void main() async {
-
-
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.dumpErrorToConsole(details);
     runApp(FlutterErrorWidget(details));
