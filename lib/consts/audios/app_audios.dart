@@ -1,7 +1,8 @@
 class AppAudios {
   AppAudios._();
 
-  static const String audioBaseDir = 'audios';
+  static const String audioBaseDir = 'audios/';
+  static const String audioTickDir = 'ticks/';
 
   ///Ticks
   static const String tick1Audio = '$audioBaseDir/ticks/Tick1.wav';

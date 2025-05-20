@@ -145,6 +145,71 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
     });
   }
 
+  late final _$enableBpmChangeAtom = Atom(
+      name: 'MetronomeControllerAbstract.enableBpmChange', context: context);
+
+  @override
+  bool get enableBpmChange {
+    _$enableBpmChangeAtom.reportRead();
+    return super.enableBpmChange;
+  }
+
+  @override
+  set enableBpmChange(bool value) {
+    _$enableBpmChangeAtom.reportWrite(value, super.enableBpmChange, () {
+      super.enableBpmChange = value;
+    });
+  }
+
+  late final _$measuresToChangeAtom = Atom(
+      name: 'MetronomeControllerAbstract.measuresToChange', context: context);
+
+  @override
+  int get measuresToChange {
+    _$measuresToChangeAtom.reportRead();
+    return super.measuresToChange;
+  }
+
+  @override
+  set measuresToChange(int value) {
+    _$measuresToChangeAtom.reportWrite(value, super.measuresToChange, () {
+      super.measuresToChange = value;
+    });
+  }
+
+  late final _$bpmChangeValueAtom = Atom(
+      name: 'MetronomeControllerAbstract.bpmChangeValue', context: context);
+
+  @override
+  int get bpmChangeValue {
+    _$bpmChangeValueAtom.reportRead();
+    return super.bpmChangeValue;
+  }
+
+  @override
+  set bpmChangeValue(int value) {
+    _$bpmChangeValueAtom.reportWrite(value, super.bpmChangeValue, () {
+      super.bpmChangeValue = value;
+    });
+  }
+
+  late final _$currentMeasureCountAtom = Atom(
+      name: 'MetronomeControllerAbstract.currentMeasureCount',
+      context: context);
+
+  @override
+  int get currentMeasureCount {
+    _$currentMeasureCountAtom.reportRead();
+    return super.currentMeasureCount;
+  }
+
+  @override
+  set currentMeasureCount(int value) {
+    _$currentMeasureCountAtom.reportWrite(value, super.currentMeasureCount, () {
+      super.currentMeasureCount = value;
+    });
+  }
+
   late final _$MetronomeControllerAbstractActionController =
       ActionController(name: 'MetronomeControllerAbstract', context: context);
 
@@ -176,6 +241,39 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
         .startAction(name: 'MetronomeControllerAbstract.setDenominator');
     try {
       return super.setDenominator(value);
+    } finally {
+      _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setEnableBpmChange(bool value) {
+    final _$actionInfo = _$MetronomeControllerAbstractActionController
+        .startAction(name: 'MetronomeControllerAbstract.setEnableBpmChange');
+    try {
+      return super.setEnableBpmChange(value);
+    } finally {
+      _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void seMeasuresToChange(int value) {
+    final _$actionInfo = _$MetronomeControllerAbstractActionController
+        .startAction(name: 'MetronomeControllerAbstract.seMeasuresToChange');
+    try {
+      return super.seMeasuresToChange(value);
+    } finally {
+      _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  void setBpmChangeValue(int value) {
+    final _$actionInfo = _$MetronomeControllerAbstractActionController
+        .startAction(name: 'MetronomeControllerAbstract.setBpmChangeValue');
+    try {
+      return super.setBpmChangeValue(value);
     } finally {
       _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
     }
@@ -215,6 +313,18 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   @override
+  void handleMeasureCompletion() {
+    final _$actionInfo =
+        _$MetronomeControllerAbstractActionController.startAction(
+            name: 'MetronomeControllerAbstract.handleMeasureCompletion');
+    try {
+      return super.handleMeasureCompletion();
+    } finally {
+      _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 bpm: ${bpm},
@@ -225,6 +335,10 @@ sliderValue: ${sliderValue},
 numerator: ${numerator},
 denominator: ${denominator},
 subdivision: ${subdivision},
+enableBpmChange: ${enableBpmChange},
+measuresToChange: ${measuresToChange},
+bpmChangeValue: ${bpmChangeValue},
+currentMeasureCount: ${currentMeasureCount},
 timeSignature: ${timeSignature}
     ''';
   }

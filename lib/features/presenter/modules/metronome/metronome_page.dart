@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:ultimate_metronome_pro/consts/musical_signatures/app_musical_signatures.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/metronome/metronome_controller.dart';
 import 'package:ultimate_metronome_pro/features/presenter/widgets/bottom_sheet/custom_bottom_sheet_widget.dart';
@@ -8,11 +9,13 @@ import 'package:ultimate_metronome_pro/features/presenter/widgets/list_wheel_scr
 import 'package:ultimate_metronome_pro/features/presenter/widgets/tabbars/custom_tab_bar_widget.dart';
 
 import '../../../../consts/musical_signatures/time_signatures/app_time_signatures.dart';
+import '../../../../core/enums/musical_notes_enum.dart';
 import '../../../../design_system/colors/app_colors.dart';
 import '../../../../design_system/painters/circle_stroke_geometric_shape_painter.dart';
 import '../../../../design_system/typography/app_fonts.dart';
 import '../../widgets/alert_dialogs/custom_alert_dialog_widget.dart';
-import '../../widgets/list_wheel_scroll_view/custom_list_wheel_scroll_view_widget.dart';
+import '../../widgets/list_wheel_scroll_view/custom_image_list_wheel_scroll_view_widget.dart';
+import '../../widgets/menus/custom_menu_dropdown_button_widget.dart';
 import '../timer/timer_controller.dart';
 
 class MetronomePage extends StatelessWidget {
@@ -161,7 +164,7 @@ class MetronomePage extends StatelessWidget {
                           builder: (BuildContext context) {
                             return CustomAlertDialog(
                               title: 'Subdivisão',
-                              content: CustomListWheelScrollViewWidget(
+                              content: CustomImageListWheelScrollViewWidget(
                                 controller: subdivisonController,
                                 onSelectedItemChanged: (index) {
                                   controller.setSubdivision(
@@ -169,7 +172,13 @@ class MetronomePage extends StatelessWidget {
                                   );
                                   debugPrint("Item atual da subdivisão: ${controller.subdivision}");
                                 },
-                                items: AppMusicalSignatures.kAppSubdivisionMusicalSignature,
+                                items: [
+                                  musicalNoteIconString(MusicalNotesEnum.quarterNote),
+                                  musicalNoteIconString(MusicalNotesEnum.eighthNote),
+                                  musicalNoteIconString(MusicalNotesEnum.sixteenthNote),
+                                  musicalNoteIconString(MusicalNotesEnum.tripletNote),
+                                  musicalNoteIconString(MusicalNotesEnum.tripletRestNote),
+                                ],
                               ),
                               actions: [
                                 TextButton(
@@ -189,14 +198,9 @@ class MetronomePage extends StatelessWidget {
                       // Define largura e altura iguais
                       padding: EdgeInsets.zero, // Remove o preenchimento adicional
                     ),
-                    child: Text(
-                      'º|', // Exibe a sigla BPM
-                      style: TextStyle(
-                        fontFamily: AppFonts.modernSansFont,
-                        fontSize: screenWidth * 0.07, // Tamanho do texto
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
+                    child: SvgPicture.asset(
+                      musicalNoteIconString(MusicalNotesEnum.quarterNote),
+                      colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
                     ),
                   ),
                 ],
@@ -378,7 +382,11 @@ class MetronomePage extends StatelessWidget {
                                 firstTabTitle: 'Cronômetro',
                                 secondTabTitle: 'Timer',
                                 firstTabContent: Padding(
-                                  padding: EdgeInsets.only(top: paddingHorizontal, left: paddingHorizontal, right: paddingHorizontal),
+                                  padding: EdgeInsets.only(
+                                    top: paddingHorizontal,
+                                    left: paddingHorizontal,
+                                    right: paddingHorizontal,
+                                  ),
                                   child: Column(
                                     children: [
                                       Observer(
@@ -407,9 +415,7 @@ class MetronomePage extends StatelessWidget {
                                               },
                                               style: OutlinedButton.styleFrom(
                                                 backgroundColor: Colors.black,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(5),
-                                                ),
+                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
                                                 minimumSize: Size(screenWidth * 0.15, screenWidth * 0.15),
                                                 padding: EdgeInsets.zero,
                                               ),
@@ -431,9 +437,7 @@ class MetronomePage extends StatelessWidget {
                                                   style: OutlinedButton.styleFrom(
                                                     backgroundColor: Colors.black,
                                                     shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(
-                                                        5,
-                                                      ),
+                                                      borderRadius: BorderRadius.circular(5),
                                                     ),
                                                     minimumSize: Size(screenWidth * 0.15, screenWidth * 0.15),
                                                     padding: EdgeInsets.zero,
@@ -467,7 +471,9 @@ class MetronomePage extends StatelessWidget {
                                           secondItems: AppTimeSignatures.kAppMinutesTimeSignature,
                                           thirdItems: AppTimeSignatures.kAppSecondsTimeSignature,
                                           onFirstSelectedItemChanged: (index) {
-                                            timerController.setCountdownHours(AppTimeSignatures.kAppHourTimeSignature[index]);
+                                            timerController.setCountdownHours(
+                                              AppTimeSignatures.kAppHourTimeSignature[index],
+                                            );
                                             debugPrint("Item atual da hora: ${timerController.countdownHours}");
                                           },
                                           onSecondSelectedItemChanged: (index) {
@@ -553,17 +559,115 @@ class MetronomePage extends StatelessWidget {
                           },
                         ),
                   ),
+                  CustomMenuDropdownButtonWidget(
+                    menuItems: [
+                      Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            Text('Alternar BPM'),
+                            Divider(),
+                            MenuItemButton(
+                              onPressed:
+                                  () => showDialog(
+                                    context: context,
+                                    builder:
+                                        (context) =>
+                                            CustomAlertDialog(title: 'Por Compasso', content: Column(
+                                              children: [
+                                                Text('Alterar X BPM após X Compassos'),
+                                                SizedBox(height: 10),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Observer(
+                                                        builder: (context) {
+                                                          return Text('${controller.bpmChangeValue} BPM');
+                                                        }
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      ElevatedButton(
+                                                          onPressed: (){
+                                                            controller.bpmChangeValue++;
+                                                          },
+                                                          child: Text('+')),
+                                                      SizedBox(width: 10),
+                                                      ElevatedButton(
+                                                          onPressed: (){
+                                                            controller.bpmChangeValue--;
+                                                          },
+                                                          child: Text('-')),
+
+                                                    ],
+                                                  ),
+                                                ),
+                                                SizedBox(height: 10),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
+                                                  child: Row(
+                                                    children: [
+                                                      Observer(
+                                                        builder: (context) {
+                                                          return Text('Após ${controller.currentMeasureCount}');
+                                                        }
+                                                      ),
+                                                      SizedBox(width: 10),
+                                                      ElevatedButton(
+                                                          onPressed: (){
+                                                            controller.currentMeasureCount++;
+                                                          },
+                                                          child: Text('+')),
+                                                      SizedBox(width: 10),
+                                                      ElevatedButton(
+                                                          onPressed: (){
+                                                            controller.currentMeasureCount--;
+                                                          },
+                                                          child: Text('-')),
+
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ), actions: []),
+                                  ),
+                              child: const Text('Por Compasso'),
+                            ),
+                            MenuItemButton(
+                              onPressed:
+                                  () => showDialog(
+                                    context: context,
+                                    builder:
+                                        (context) =>
+                                            CustomAlertDialog(title: 'Por Tempo', content: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text('Alterar X BPM após X segundos'),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
+                                                actions: []),
+                                  ),
+                              child: const Text('Por Tempo'),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                   Row(
                     children: [
                       Observer(
                         builder: (context) {
                           String timerStr = '00:00:00';
-                          if(timerController.isCountdownRunning && !timerController.isStopwatchRunning) {
+                          if (timerController.isCountdownRunning && !timerController.isStopwatchRunning) {
                             final hoursStr = timerController.countdownHours.toString().padLeft(2, '0');
                             final minutesStr = timerController.countdownMinutes.toString().padLeft(2, '0');
                             final secondsStr = timerController.countdownSeconds.toString().padLeft(2, '0');
                             timerStr = '$hoursStr:$minutesStr:$secondsStr';
-                          } else  if(!timerController.isCountdownRunning && timerController.isStopwatchRunning) {
+                          } else if (!timerController.isCountdownRunning && timerController.isStopwatchRunning) {
                             final hoursStr = timerController.stopwatchHours.toString().padLeft(2, '0');
                             final minutesStr = timerController.stopwatchMinutes.toString().padLeft(2, '0');
                             final secondsStr = timerController.stopwatchSeconds.toString().padLeft(2, '0');
@@ -581,16 +685,18 @@ class MetronomePage extends StatelessWidget {
                           );
                         },
                       ),
-                      SizedBox(width: paddingHorizontal),
+                      SizedBox(width: paddingHorizontal / 2),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           Observer(
                             builder: (context) {
                               return IconButton(
-                                icon: Icon(!timerController.isCountdownRunning
-                                    ? Icons.play_arrow
-                                    : Icons.pause, color: Colors.white, size: screenWidth * 0.1),
+                                icon: Icon(
+                                  !timerController.isCountdownRunning ? Icons.play_arrow : Icons.pause,
+                                  color: Colors.white,
+                                  size: screenWidth * 0.1,
+                                ),
                                 onPressed: () {
                                   if (!timerController.isCountdownRunning) {
                                     controller.startMetronome();
@@ -599,9 +705,9 @@ class MetronomePage extends StatelessWidget {
                                     timerController.pauseCountdownTimer();
                                     controller.stopMetronome();
                                   }
-                                }
+                                },
                               );
-                            }
+                            },
                           ),
                           IconButton(
                             icon: Icon(Icons.stop, color: Colors.white, size: screenWidth * 0.1),

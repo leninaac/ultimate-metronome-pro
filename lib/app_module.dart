@@ -23,6 +23,7 @@ void binds(Injector i) {
   @override
   void routes(RouteManager r) {
    r.child(AppRoutes.appDefaultRoute, child: (context) => MetronomePage());
-   r.child(AppRoutes.appHomePageRoute, child: (context) => HomePage());
+   r.child(AppRoutes.appMetronomePageRoute, child: (context) => MetronomePage());
+   r.child(AppRoutes.appHomePageRoute, child: (context) => HomePage(remainingTimeInSeconds: 5, initialBpm: 120,));
   }
 }
