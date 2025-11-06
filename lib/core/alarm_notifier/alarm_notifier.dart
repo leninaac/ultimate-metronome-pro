@@ -65,7 +65,7 @@ class AlarmNotifier {
   //   }
   // }
 
-  static forPlatformSpecific(String title, String body){
+  static void forPlatformSpecific(String title, String body){
     if(Platform.isMacOS) showMacOsNotification(title, body);
     if(Platform.isIOS) showIosNotification(title, body);
     if(Platform.isAndroid) showAndroidNotification(title, body);

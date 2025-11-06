@@ -12,7 +12,7 @@ import '../../../../consts/musical_signatures/time_signatures/app_time_signature
 import '../../../../core/enums/musical_notes_enum.dart';
 import '../../../../design_system/colors/app_colors.dart';
 import '../../../../design_system/painters/circle_stroke_geometric_shape_painter.dart';
-import '../../../../design_system/typography/app_fonts.dart';
+import '../../../../design_system/typography/app_font_names.dart';
 import '../../widgets/alert_dialogs/custom_alert_dialog_widget.dart';
 import '../../widgets/list_wheel_scroll_view/custom_image_list_wheel_scroll_view_widget.dart';
 import '../../widgets/menus/custom_menu_dropdown_button_widget.dart';
@@ -25,7 +25,7 @@ class MetronomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Modular.get<MetronomeController>();
     final timerController = Modular.get<TimerController>();
-    controller.preloadAudio();
+    // controller.preloadAudio();
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -264,7 +264,7 @@ class MetronomePage extends StatelessWidget {
                         (newBpm != null && newBpm <= 0) ? newBpm = 0 : newBpm;
 
                         if (newBpm != null) {
-                          controller.setBpm(newBpm);
+                          // controller.setBpm(newBpm);
                         }
                       },
                     ),
@@ -310,7 +310,7 @@ class MetronomePage extends StatelessWidget {
                             divisions: 56,
                             value: controller.sliderValue,
                             onChanged: (double value) {
-                              controller.setBpm(value.toInt());
+                              // controller.setBpm(value.toInt());
                             },
                           ),
                         ),

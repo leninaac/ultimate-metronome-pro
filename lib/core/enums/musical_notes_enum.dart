@@ -11,7 +11,7 @@ enum MusicalNotesEnum {
   tripletRestNote,
 }
 
-musicalNoteIconString(type) {
+String musicalNoteIconString(MusicalNotesEnum type) {
   switch (type) {
     case MusicalNotesEnum.wholeNote:
       return '';
@@ -29,7 +29,5 @@ musicalNoteIconString(type) {
       return AppDrawables.tripletIcon;
     case MusicalNotesEnum.tripletRestNote:
       return AppDrawables.tripletRestIcon;
-    default:
-      return '';
-  }
+    }
 }

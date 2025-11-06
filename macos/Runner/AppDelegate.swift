@@ -14,6 +14,11 @@ class AppDelegate: FlutterAppDelegate {
     }
 
     override func applicationDidFinishLaunching(_ aNotification: Notification) {
+        mainFlutterWindow?.title = "Ultimate Metronome Pro"
+        
+        // Define um estilo de janela fixo, sem a opção de redimensionamento
+        mainFlutterWindow?.styleMask = [.titled, .closable, .miniaturizable]
+
         let flutterViewController = mainFlutterWindow?.contentViewController as! FlutterViewController
         let notificationChannelName = "br.com.lenin.canuto.ultimateMetronomePro"
         let notificationChannel = FlutterMethodChannel(name: notificationChannelName,

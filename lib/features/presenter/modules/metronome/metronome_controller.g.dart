@@ -13,28 +13,43 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
 
   @override
   String get timeSignature =>
-      (_$timeSignatureComputed ??= Computed<String>(() => super.timeSignature,
-              name: 'MetronomeControllerAbstract.timeSignature'))
+      (_$timeSignatureComputed ??= Computed<String>(
+            () => super.timeSignature,
+            name: 'MetronomeControllerAbstract.timeSignature',
+          ))
           .value;
-
-  late final _$bpmAtom =
-      Atom(name: 'MetronomeControllerAbstract.bpm', context: context);
+  Computed<bool>? _$isBpmChangeWarningActiveComputed;
 
   @override
-  int get bpm {
+  bool get isBpmChangeWarningActive =>
+      (_$isBpmChangeWarningActiveComputed ??= Computed<bool>(
+            () => super.isBpmChangeWarningActive,
+            name: 'MetronomeControllerAbstract.isBpmChangeWarningActive',
+          ))
+          .value;
+
+  late final _$bpmAtom = Atom(
+    name: 'MetronomeControllerAbstract.bpm',
+    context: context,
+  );
+
+  @override
+  double get bpm {
     _$bpmAtom.reportRead();
     return super.bpm;
   }
 
   @override
-  set bpm(int value) {
+  set bpm(double value) {
     _$bpmAtom.reportWrite(value, super.bpm, () {
       super.bpm = value;
     });
   }
 
   late final _$metronomeIsRunningAtom = Atom(
-      name: 'MetronomeControllerAbstract.metronomeIsRunning', context: context);
+    name: 'MetronomeControllerAbstract.metronomeIsRunning',
+    context: context,
+  );
 
   @override
   bool get metronomeIsRunning {
@@ -50,7 +65,9 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   late final _$audioTickPositionAtom = Atom(
-      name: 'MetronomeControllerAbstract.audioTickPosition', context: context);
+    name: 'MetronomeControllerAbstract.audioTickPosition',
+    context: context,
+  );
 
   @override
   int get audioTickPosition {
@@ -66,7 +83,9 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   late final _$visualTickPositionAtom = Atom(
-      name: 'MetronomeControllerAbstract.visualTickPosition', context: context);
+    name: 'MetronomeControllerAbstract.visualTickPosition',
+    context: context,
+  );
 
   @override
   int get visualTickPosition {
@@ -81,8 +100,10 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
     });
   }
 
-  late final _$sliderValueAtom =
-      Atom(name: 'MetronomeControllerAbstract.sliderValue', context: context);
+  late final _$sliderValueAtom = Atom(
+    name: 'MetronomeControllerAbstract.sliderValue',
+    context: context,
+  );
 
   @override
   double get sliderValue {
@@ -97,8 +118,10 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
     });
   }
 
-  late final _$numeratorAtom =
-      Atom(name: 'MetronomeControllerAbstract.numerator', context: context);
+  late final _$numeratorAtom = Atom(
+    name: 'MetronomeControllerAbstract.numerator',
+    context: context,
+  );
 
   @override
   int get numerator {
@@ -113,8 +136,10 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
     });
   }
 
-  late final _$denominatorAtom =
-      Atom(name: 'MetronomeControllerAbstract.denominator', context: context);
+  late final _$denominatorAtom = Atom(
+    name: 'MetronomeControllerAbstract.denominator',
+    context: context,
+  );
 
   @override
   int get denominator {
@@ -129,8 +154,10 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
     });
   }
 
-  late final _$subdivisionAtom =
-      Atom(name: 'MetronomeControllerAbstract.subdivision', context: context);
+  late final _$subdivisionAtom = Atom(
+    name: 'MetronomeControllerAbstract.subdivision',
+    context: context,
+  );
 
   @override
   int get subdivision {
@@ -146,7 +173,9 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   late final _$enableBpmChangeAtom = Atom(
-      name: 'MetronomeControllerAbstract.enableBpmChange', context: context);
+    name: 'MetronomeControllerAbstract.enableBpmChange',
+    context: context,
+  );
 
   @override
   bool get enableBpmChange {
@@ -162,7 +191,9 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   late final _$measuresToChangeAtom = Atom(
-      name: 'MetronomeControllerAbstract.measuresToChange', context: context);
+    name: 'MetronomeControllerAbstract.measuresToChange',
+    context: context,
+  );
 
   @override
   int get measuresToChange {
@@ -178,24 +209,27 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   late final _$bpmChangeValueAtom = Atom(
-      name: 'MetronomeControllerAbstract.bpmChangeValue', context: context);
+    name: 'MetronomeControllerAbstract.bpmChangeValue',
+    context: context,
+  );
 
   @override
-  int get bpmChangeValue {
+  double get bpmChangeValue {
     _$bpmChangeValueAtom.reportRead();
     return super.bpmChangeValue;
   }
 
   @override
-  set bpmChangeValue(int value) {
+  set bpmChangeValue(double value) {
     _$bpmChangeValueAtom.reportWrite(value, super.bpmChangeValue, () {
       super.bpmChangeValue = value;
     });
   }
 
   late final _$currentMeasureCountAtom = Atom(
-      name: 'MetronomeControllerAbstract.currentMeasureCount',
-      context: context);
+    name: 'MetronomeControllerAbstract.currentMeasureCount',
+    context: context,
+  );
 
   @override
   int get currentMeasureCount {
@@ -210,11 +244,41 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
     });
   }
 
-  late final _$MetronomeControllerAbstractActionController =
-      ActionController(name: 'MetronomeControllerAbstract', context: context);
+  late final _$musicalTempoAtom = Atom(
+    name: 'MetronomeControllerAbstract.musicalTempo',
+    context: context,
+  );
 
   @override
-  dynamic setSubdivision(int value) {
+  String get musicalTempo {
+    _$musicalTempoAtom.reportRead();
+    return super.musicalTempo;
+  }
+
+  @override
+  set musicalTempo(String value) {
+    _$musicalTempoAtom.reportWrite(value, super.musicalTempo, () {
+      super.musicalTempo = value;
+    });
+  }
+
+  late final _$startMetronomeAsyncAction = AsyncAction(
+    'MetronomeControllerAbstract.startMetronome',
+    context: context,
+  );
+
+  @override
+  Future<void> startMetronome() {
+    return _$startMetronomeAsyncAction.run(() => super.startMetronome());
+  }
+
+  late final _$MetronomeControllerAbstractActionController = ActionController(
+    name: 'MetronomeControllerAbstract',
+    context: context,
+  );
+
+  @override
+  void setSubdivision(int value) {
     final _$actionInfo = _$MetronomeControllerAbstractActionController
         .startAction(name: 'MetronomeControllerAbstract.setSubdivision');
     try {
@@ -225,7 +289,7 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   @override
-  dynamic setNumerator(int value) {
+  void setNumerator(int value) {
     final _$actionInfo = _$MetronomeControllerAbstractActionController
         .startAction(name: 'MetronomeControllerAbstract.setNumerator');
     try {
@@ -236,11 +300,24 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   @override
-  dynamic setDenominator(int value) {
+  void setDenominator(int value) {
     final _$actionInfo = _$MetronomeControllerAbstractActionController
         .startAction(name: 'MetronomeControllerAbstract.setDenominator');
     try {
       return super.setDenominator(value);
+    } finally {
+      _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
+  String getMusicalTempoFromBpm(double bpm) {
+    final _$actionInfo = _$MetronomeControllerAbstractActionController
+        .startAction(
+          name: 'MetronomeControllerAbstract.getMusicalTempoFromBpm',
+        );
+    try {
+      return super.getMusicalTempoFromBpm(bpm);
     } finally {
       _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
     }
@@ -258,18 +335,18 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   @override
-  void seMeasuresToChange(int value) {
+  void setMeasuresToChange(int value) {
     final _$actionInfo = _$MetronomeControllerAbstractActionController
-        .startAction(name: 'MetronomeControllerAbstract.seMeasuresToChange');
+        .startAction(name: 'MetronomeControllerAbstract.setMeasuresToChange');
     try {
-      return super.seMeasuresToChange(value);
+      return super.setMeasuresToChange(value);
     } finally {
       _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
     }
   }
 
   @override
-  void setBpmChangeValue(int value) {
+  void setBpmChangeValue(double value) {
     final _$actionInfo = _$MetronomeControllerAbstractActionController
         .startAction(name: 'MetronomeControllerAbstract.setBpmChangeValue');
     try {
@@ -280,22 +357,11 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
   }
 
   @override
-  void setBpm(int newBpm) {
+  void setBpm(double newBpm) {
     final _$actionInfo = _$MetronomeControllerAbstractActionController
         .startAction(name: 'MetronomeControllerAbstract.setBpm');
     try {
       return super.setBpm(newBpm);
-    } finally {
-      _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void startMetronome() {
-    final _$actionInfo = _$MetronomeControllerAbstractActionController
-        .startAction(name: 'MetronomeControllerAbstract.startMetronome');
-    try {
-      return super.startMetronome();
     } finally {
       _$MetronomeControllerAbstractActionController.endAction(_$actionInfo);
     }
@@ -314,9 +380,10 @@ mixin _$MetronomeController on MetronomeControllerAbstract, Store {
 
   @override
   void handleMeasureCompletion() {
-    final _$actionInfo =
-        _$MetronomeControllerAbstractActionController.startAction(
-            name: 'MetronomeControllerAbstract.handleMeasureCompletion');
+    final _$actionInfo = _$MetronomeControllerAbstractActionController
+        .startAction(
+          name: 'MetronomeControllerAbstract.handleMeasureCompletion',
+        );
     try {
       return super.handleMeasureCompletion();
     } finally {
@@ -339,7 +406,9 @@ enableBpmChange: ${enableBpmChange},
 measuresToChange: ${measuresToChange},
 bpmChangeValue: ${bpmChangeValue},
 currentMeasureCount: ${currentMeasureCount},
-timeSignature: ${timeSignature}
+musicalTempo: ${musicalTempo},
+timeSignature: ${timeSignature},
+isBpmChangeWarningActive: ${isBpmChangeWarningActive}
     ''';
   }
 }

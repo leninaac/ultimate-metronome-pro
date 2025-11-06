@@ -1,7 +1,7 @@
 class AppAudios {
   AppAudios._();
 
-  static const String audioBaseDir = 'audios/';
+  static const String audioBaseDir = 'audios';
   static const String audioTickDir = 'ticks/';
 
   ///Ticks

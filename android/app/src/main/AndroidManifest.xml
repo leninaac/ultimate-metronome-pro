@@ -3,7 +3,7 @@
 
 
     <application
-        android:label="ultimate_metronome_pro"
+        android:label="Ultimate Metronome Pro"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

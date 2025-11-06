@@ -31,7 +31,7 @@ class BpmInputFormatter {
     final String correctedText = correctInput(currentText);
 
     if (currentText != correctedText) {
-      final currentSelection = controller.selection;
+      
       controller.value = controller.value.copyWith(
         text: correctedText,
         selection: TextSelection.collapsed(offset: correctedText.length),

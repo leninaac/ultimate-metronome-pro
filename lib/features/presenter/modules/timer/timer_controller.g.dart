@@ -9,8 +9,10 @@ part of 'timer_controller.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$TimerController on TimerControllerAbstract, Store {
-  late final _$stopwatchHoursAtom =
-      Atom(name: 'TimerControllerAbstract.stopwatchHours', context: context);
+  late final _$stopwatchHoursAtom = Atom(
+    name: 'TimerControllerAbstract.stopwatchHours',
+    context: context,
+  );
 
   @override
   int get stopwatchHours {
@@ -25,8 +27,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
     });
   }
 
-  late final _$stopwatchMinutesAtom =
-      Atom(name: 'TimerControllerAbstract.stopwatchMinutes', context: context);
+  late final _$stopwatchMinutesAtom = Atom(
+    name: 'TimerControllerAbstract.stopwatchMinutes',
+    context: context,
+  );
 
   @override
   int get stopwatchMinutes {
@@ -41,8 +45,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
     });
   }
 
-  late final _$stopwatchSecondsAtom =
-      Atom(name: 'TimerControllerAbstract.stopwatchSeconds', context: context);
+  late final _$stopwatchSecondsAtom = Atom(
+    name: 'TimerControllerAbstract.stopwatchSeconds',
+    context: context,
+  );
 
   @override
   int get stopwatchSeconds {
@@ -57,8 +63,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
     });
   }
 
-  late final _$countdownHoursAtom =
-      Atom(name: 'TimerControllerAbstract.countdownHours', context: context);
+  late final _$countdownHoursAtom = Atom(
+    name: 'TimerControllerAbstract.countdownHours',
+    context: context,
+  );
 
   @override
   int get countdownHours {
@@ -73,8 +81,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
     });
   }
 
-  late final _$countdownMinutesAtom =
-      Atom(name: 'TimerControllerAbstract.countdownMinutes', context: context);
+  late final _$countdownMinutesAtom = Atom(
+    name: 'TimerControllerAbstract.countdownMinutes',
+    context: context,
+  );
 
   @override
   int get countdownMinutes {
@@ -89,8 +99,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
     });
   }
 
-  late final _$countdownSecondsAtom =
-      Atom(name: 'TimerControllerAbstract.countdownSeconds', context: context);
+  late final _$countdownSecondsAtom = Atom(
+    name: 'TimerControllerAbstract.countdownSeconds',
+    context: context,
+  );
 
   @override
   int get countdownSeconds {
@@ -105,8 +117,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
     });
   }
 
-  late final _$millisecondsAtom =
-      Atom(name: 'TimerControllerAbstract.milliseconds', context: context);
+  late final _$millisecondsAtom = Atom(
+    name: 'TimerControllerAbstract.milliseconds',
+    context: context,
+  );
 
   @override
   int get milliseconds {
@@ -122,7 +136,9 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   }
 
   late final _$remainingMillisecondsAtom = Atom(
-      name: 'TimerControllerAbstract.remainingMilliseconds', context: context);
+    name: 'TimerControllerAbstract.remainingMilliseconds',
+    context: context,
+  );
 
   @override
   int get remainingMilliseconds {
@@ -132,14 +148,19 @@ mixin _$TimerController on TimerControllerAbstract, Store {
 
   @override
   set remainingMilliseconds(int value) {
-    _$remainingMillisecondsAtom.reportWrite(value, super.remainingMilliseconds,
-        () {
-      super.remainingMilliseconds = value;
-    });
+    _$remainingMillisecondsAtom.reportWrite(
+      value,
+      super.remainingMilliseconds,
+      () {
+        super.remainingMilliseconds = value;
+      },
+    );
   }
 
   late final _$isStopwatchRunningAtom = Atom(
-      name: 'TimerControllerAbstract.isStopwatchRunning', context: context);
+    name: 'TimerControllerAbstract.isStopwatchRunning',
+    context: context,
+  );
 
   @override
   bool get isStopwatchRunning {
@@ -155,7 +176,9 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   }
 
   late final _$isCountdownRunningAtom = Atom(
-      name: 'TimerControllerAbstract.isCountdownRunning', context: context);
+    name: 'TimerControllerAbstract.isCountdownRunning',
+    context: context,
+  );
 
   @override
   bool get isCountdownRunning {
@@ -170,8 +193,28 @@ mixin _$TimerController on TimerControllerAbstract, Store {
     });
   }
 
-  late final _$timerTypeAtom =
-      Atom(name: 'TimerControllerAbstract.timerType', context: context);
+  late final _$countdownSessionIdAtom = Atom(
+    name: 'TimerControllerAbstract.countdownSessionId',
+    context: context,
+  );
+
+  @override
+  int get countdownSessionId {
+    _$countdownSessionIdAtom.reportRead();
+    return super.countdownSessionId;
+  }
+
+  @override
+  set countdownSessionId(int value) {
+    _$countdownSessionIdAtom.reportWrite(value, super.countdownSessionId, () {
+      super.countdownSessionId = value;
+    });
+  }
+
+  late final _$timerTypeAtom = Atom(
+    name: 'TimerControllerAbstract.timerType',
+    context: context,
+  );
 
   @override
   String get timerType {
@@ -186,13 +229,16 @@ mixin _$TimerController on TimerControllerAbstract, Store {
     });
   }
 
-  late final _$TimerControllerAbstractActionController =
-      ActionController(name: 'TimerControllerAbstract', context: context);
+  late final _$TimerControllerAbstractActionController = ActionController(
+    name: 'TimerControllerAbstract',
+    context: context,
+  );
 
   @override
   void setTimerType(String type) {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.setTimerType');
+      name: 'TimerControllerAbstract.setTimerType',
+    );
     try {
       return super.setTimerType(type);
     } finally {
@@ -201,9 +247,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   }
 
   @override
-  dynamic setStopwatchHours(int value) {
+  void setStopwatchHours(int value) {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.setStopwatchHours');
+      name: 'TimerControllerAbstract.setStopwatchHours',
+    );
     try {
       return super.setStopwatchHours(value);
     } finally {
@@ -212,9 +259,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   }
 
   @override
-  dynamic setStopwatchMinutes(int value) {
+  void setStopwatchMinutes(int value) {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.setStopwatchMinutes');
+      name: 'TimerControllerAbstract.setStopwatchMinutes',
+    );
     try {
       return super.setStopwatchMinutes(value);
     } finally {
@@ -223,9 +271,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   }
 
   @override
-  dynamic setStopwatchSeconds(int value) {
+  void setStopwatchSeconds(int value) {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.setStopwatchSeconds');
+      name: 'TimerControllerAbstract.setStopwatchSeconds',
+    );
     try {
       return super.setStopwatchSeconds(value);
     } finally {
@@ -234,9 +283,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   }
 
   @override
-  dynamic setCountdownHours(int value) {
+  void setCountdownHours(int value) {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.setCountdownHours');
+      name: 'TimerControllerAbstract.setCountdownHours',
+    );
     try {
       return super.setCountdownHours(value);
     } finally {
@@ -245,9 +295,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   }
 
   @override
-  dynamic setCountdownMinutes(int value) {
+  void setCountdownMinutes(int value) {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.setCountdownMinutes');
+      name: 'TimerControllerAbstract.setCountdownMinutes',
+    );
     try {
       return super.setCountdownMinutes(value);
     } finally {
@@ -256,9 +307,10 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   }
 
   @override
-  dynamic setCountdownSeconds(int value) {
+  void setCountdownSeconds(int value) {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.setCountdownSeconds');
+      name: 'TimerControllerAbstract.setCountdownSeconds',
+    );
     try {
       return super.setCountdownSeconds(value);
     } finally {
@@ -269,7 +321,8 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   @override
   void startStopwatch() {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.startStopwatch');
+      name: 'TimerControllerAbstract.startStopwatch',
+    );
     try {
       return super.startStopwatch();
     } finally {
@@ -280,7 +333,8 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   @override
   void pauseStopwatch() {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.pauseStopwatch');
+      name: 'TimerControllerAbstract.pauseStopwatch',
+    );
     try {
       return super.pauseStopwatch();
     } finally {
@@ -291,7 +345,8 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   @override
   void stopStopwatch() {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.stopStopwatch');
+      name: 'TimerControllerAbstract.stopStopwatch',
+    );
     try {
       return super.stopStopwatch();
     } finally {
@@ -302,7 +357,8 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   @override
   void resetStopwatch() {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.resetStopwatch');
+      name: 'TimerControllerAbstract.resetStopwatch',
+    );
     try {
       return super.resetStopwatch();
     } finally {
@@ -313,7 +369,8 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   @override
   void setCountdownTimer() {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.setCountdownTimer');
+      name: 'TimerControllerAbstract.setCountdownTimer',
+    );
     try {
       return super.setCountdownTimer();
     } finally {
@@ -324,7 +381,8 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   @override
   void startCountdownTimer(MetronomeController metronomeController) {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.startCountdownTimer');
+      name: 'TimerControllerAbstract.startCountdownTimer',
+    );
     try {
       return super.startCountdownTimer(metronomeController);
     } finally {
@@ -335,7 +393,8 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   @override
   void pauseCountdownTimer() {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.pauseCountdownTimer');
+      name: 'TimerControllerAbstract.pauseCountdownTimer',
+    );
     try {
       return super.pauseCountdownTimer();
     } finally {
@@ -346,7 +405,8 @@ mixin _$TimerController on TimerControllerAbstract, Store {
   @override
   void resetCountdownTimer() {
     final _$actionInfo = _$TimerControllerAbstractActionController.startAction(
-        name: 'TimerControllerAbstract.resetCountdownTimer');
+      name: 'TimerControllerAbstract.resetCountdownTimer',
+    );
     try {
       return super.resetCountdownTimer();
     } finally {
@@ -367,6 +427,7 @@ milliseconds: ${milliseconds},
 remainingMilliseconds: ${remainingMilliseconds},
 isStopwatchRunning: ${isStopwatchRunning},
 isCountdownRunning: ${isCountdownRunning},
+countdownSessionId: ${countdownSessionId},
 timerType: ${timerType}
     ''';
   }

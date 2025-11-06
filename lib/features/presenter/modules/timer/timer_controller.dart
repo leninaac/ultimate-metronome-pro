@@ -1,38 +1,45 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 
 import 'package:mobx/mobx.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/metronome/metronome_controller.dart';
 
 import '../../../../core/alarm_notifier/alarm_notifier.dart';
+import '../../../../core/time_service/countdown_service.dart';
+import '../../../../core/time_service/stopwatch_service.dart';
 
 part 'timer_controller.g.dart';
 
 class TimerController = TimerControllerAbstract with _$TimerController;
 
 abstract class TimerControllerAbstract with Store {
-  @observable
-  int stopwatchHours = 00;
-  @observable
-  int stopwatchMinutes = 00;
-  @observable
-  int stopwatchSeconds = 00;
-  @observable
-  int countdownHours = 00;
-  @observable
-  int countdownMinutes = 00;
-  @observable
-  int countdownSeconds = 00;
-  @observable
-  int milliseconds = 00;
+  final StopwatchService _stopwatchService = StopwatchService();
+  final CountdownService _countdownService = CountdownService();
 
+  @observable
+  int stopwatchHours = 0;
+  @observable
+  int stopwatchMinutes = 0;
+  @observable
+  int stopwatchSeconds = 0;
+  @observable
+  int countdownHours = 0;
+  @observable
+  int countdownMinutes = 0;
+  @observable
+  int countdownSeconds = 0;
+  @observable
+  int milliseconds = 0;
   @observable
   int remainingMilliseconds = 0;
   @observable
   bool isStopwatchRunning = false;
   @observable
   bool isCountdownRunning = false;
+  @observable
+  int countdownSessionId = 0;
   Timer? stopwatchTimer;
   Timer? countdownTimer;
   @observable
@@ -45,82 +52,89 @@ abstract class TimerControllerAbstract with Store {
   }
 
   @action
-  setStopwatchHours(int value) {
+  void setStopwatchHours(int value) {
     stopwatchHours = value;
     debugPrint('horas atualizadas para: $stopwatchHours');
   }
 
   @action
-  setStopwatchMinutes(int value) {
+  void setStopwatchMinutes(int value) {
     stopwatchMinutes = value;
     debugPrint('minutos atualizados para: $stopwatchMinutes');
   }
 
   @action
-  setStopwatchSeconds(int value) {
+  void setStopwatchSeconds(int value) {
     stopwatchSeconds = value;
     debugPrint('segundos atualizados para: $stopwatchSeconds');
   }
 
   @action
-  setCountdownHours(int value) {
+  void setCountdownHours(int value) {
     countdownHours = value;
     debugPrint('horas atualizadas para: $countdownHours');
   }
 
   @action
-  setCountdownMinutes(int value) {
+  void setCountdownMinutes(int value) {
     countdownMinutes = value;
     debugPrint('minutos atualizados para: $countdownMinutes');
   }
 
   @action
-  setCountdownSeconds(int value) {
+  void setCountdownSeconds(int value) {
     countdownSeconds = value;
     debugPrint('segundos atualizados para: $countdownSeconds');
   }
 
+  Duration getCountdownDuration() {
+    return Duration(
+      hours: countdownHours,
+      minutes: countdownMinutes,
+      seconds: countdownSeconds,
+    );
+  }
+
   @action
   void startStopwatch() {
+    if (isCountdownRunning) pauseCountdownTimer();
+    if (isStopwatchRunning) return;
     isStopwatchRunning = true;
+    timerType = 'Stopwatch';
 
-    debugPrint('Cronômetro iniciado');
-    if (stopwatchTimer != null) {
-      stopwatchTimer!.cancel();
-    }
-    stopwatchTimer = Timer.periodic(Duration(milliseconds: 1), (timer) {
-      milliseconds++;
-      if (milliseconds == 1000) {
-        stopwatchSeconds++;
-        milliseconds = 0;
-      }
-      if (stopwatchSeconds == 60) {
-        stopwatchMinutes++;
-        stopwatchSeconds = 0;
-      }
+    _stopwatchService.start((h, m, s) {
+      stopwatchHours = h;
+      stopwatchMinutes = m;
+      stopwatchSeconds = s;
     });
+
+    final metronomeController = Modular.get<MetronomeController>();
+    if (!metronomeController.metronomeIsRunning) {
+      metronomeController.startMetronome();
+    }
   }
 
   @action
   void pauseStopwatch() {
-    debugPrint('Cronômetro pausado');
-    stopwatchTimer!.cancel();
+    _stopwatchService.stop();
     isStopwatchRunning = false;
   }
 
   @action
   void stopStopwatch() {
     debugPrint('Cronômetro parado');
-    stopwatchTimer!.cancel();
+    stopwatchTimer?.cancel();
     isStopwatchRunning = false;
   }
 
   @action
   void resetStopwatch() {
-    stopStopwatch();
+    _stopwatchService.reset();
+    stopwatchHours = 0;
     stopwatchMinutes = 0;
     stopwatchSeconds = 0;
     milliseconds = 0;
+    isStopwatchRunning = false;
   }
 
   @action
@@ -131,46 +145,54 @@ abstract class TimerControllerAbstract with Store {
 
   @action
   void startCountdownTimer(MetronomeController metronomeController) {
+    if (isStopwatchRunning) pauseStopwatch();
     if (isCountdownRunning) return;
     isCountdownRunning = true;
-    debugPrint('Countdown iniciado');
-    setCountdownTimer();
+    timerType = 'Countdown';
 
-    countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (remainingMilliseconds <= 0) {
+    final totalMs = (countdownHours * 3600 + countdownMinutes * 60 + countdownSeconds) * 1000;
+
+    _countdownService.start(
+      totalMs: totalMs,
+      onUpdate: (h, m, s) {
+        countdownHours = h;
+        countdownMinutes = m;
+        countdownSeconds = s;
+        remainingMilliseconds = (h * 3600 + m * 60 + s) * 1000;
+      },
+      onFinish: () {
         pauseCountdownTimer();
-        debugPrint('Countdown atingiu zero.');
-        if(metronomeController.metronomeIsRunning) {
-          metronomeController.stopMetronome();
-          debugPrint('Metronomo Parou.');
-        }
-        AlarmNotifier.forPlatformSpecific('Alarme', 'Tempo finalizado');
-      } else {
-        remainingMilliseconds -= 1000;
 
-        int totalSeconds = remainingMilliseconds ~/ 1000;
-        countdownHours = totalSeconds ~/ 3600;
-        countdownMinutes = (totalSeconds % 3600) ~/ 60;
-        countdownSeconds = totalSeconds % 60;
-      }
-    });
+        if (metronomeController.metronomeIsRunning) {
+          metronomeController.stopMetronome();
+        }
+
+        timerType = 'Indefinido';
+
+        AlarmNotifier.forPlatformSpecific('Alarme', 'Tempo finalizado');
+      },
+    );
+
+    if (!metronomeController.metronomeIsRunning) {
+      metronomeController.startMetronome();
+    }
+
+    countdownSessionId++;
   }
 
   @action
   void pauseCountdownTimer() {
-    countdownTimer?.cancel();
+    _countdownService.stop();
     isCountdownRunning = false;
-    debugPrint('Countdown pausado');
   }
 
   @action
   void resetCountdownTimer() {
-    pauseCountdownTimer();
-    remainingMilliseconds = 0;
+    _countdownService.reset();
     countdownHours = 0;
     countdownMinutes = 0;
     countdownSeconds = 0;
-    debugPrint('Countdown resetado');
+    remainingMilliseconds = 0;
     isCountdownRunning = false;
   }
 }

@@ -30,30 +30,51 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
-  flutter_modular: ^6.3.4
-  flutter_svg: ^2.1.0
+  flutter_modular: ^6.4.1
+  flutter_svg: ^2.2.2
   mobx: ^2.5.0
   flutter_mobx: ^2.3.0
   shared_preferences: ^2.5.3
-  audioplayers: ^6.4.0
+  audioplayers: ^6.5.1
   desktop_window: ^0.4.2
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.4.15
-  mobx_codegen: ^2.7.0
-
+  build_runner: ^2.9.0
+  mobx_codegen: ^2.7.4
+  mocktail: ^1.0.4
+  flutter_launcher_icons: ^0.14.4
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
+
+flutter_launcher_icons:
+  image_path: "assets/logo/png_sem_fundo.png"
+  android: true
+  remove_alpha_ios: true
+  adaptive_icon_background: "#FF121212"
+  ios: true
+  background_color_ios: "#121212"
+  macos:
+    generate: true
+    image_path: "assets/logo/png_sem_fundo.png"
+    background_color: "#FF121212"
+  windows:
+    generate: true
+    image_path: "assets/logo/png_sem_fundo.png"
+    background_color: "#FF121212"
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -105,7 +126,57 @@ flutter:
   fonts:
     - family: Modern Sans
       fonts:
-        - asset: assets/fonts/modern_sans_light.otf
+        - asset: assets/fonts/modern_sans/modern_sans_light.otf
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/montserrat/Montserrat-Thin.ttf
+          weight: 100
+          style: normal
+        - asset: assets/fonts/montserrat/Montserrat-ThinItalic.ttf
+          weight: 100
+          style: italic
+        - asset: assets/fonts/montserrat/Montserrat-ExtraLight.ttf
+          weight: 200
+          style: normal
+        - asset: assets/fonts/montserrat/Montserrat-ExtraLightItalic.ttf
+          weight: 200
+          style: italic
+        - asset: assets/fonts/montserrat/Montserrat-Regular.ttf
+          weight: 400
+          style: normal
+        - asset: assets/fonts/montserrat/Montserrat-Italic.ttf
+          weight: 400
+          style: italic
+        - asset: assets/fonts/montserrat/Montserrat-Medium.ttf
+          weight: 500
+          style: normal
+        - asset: assets/fonts/montserrat/Montserrat-MediumItalic.ttf
+          weight: 500
+          style: italic
+        - asset: assets/fonts/montserrat/Montserrat-SemiBold.ttf
+          weight: 600
+          style: normal
+        - asset: assets/fonts/montserrat/Montserrat-SemiBoldItalic.ttf
+          weight: 600
+          style: italic
+        - asset: assets/fonts/montserrat/Montserrat-Bold.ttf
+          weight: 700
+          style: normal
+        - asset: assets/fonts/montserrat/Montserrat-BoldItalic.ttf
+          weight: 700
+          style: italic
+        - asset: assets/fonts/montserrat/Montserrat-ExtraBold.ttf
+          weight: 800
+          style: normal
+        - asset: assets/fonts/montserrat/Montserrat-ExtraBoldItalic.ttf
+          weight: 800
+          style: italic
+        - asset: assets/fonts/montserrat/Montserrat-Black.ttf
+          weight: 900
+          style: normal
+        - asset: assets/fonts/montserrat/Montserrat-BlackItalic.ttf
+          weight: 900
+          style: italic
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

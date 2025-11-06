@@ -13,8 +13,8 @@ class CustomBottomSheetWidget extends StatelessWidget {
       child: SingleChildScrollView(
         child: Container(
           width: MediaQuery.of(context).size.width,
-          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3), // Define altura máxima
-          decoration: BoxDecoration(color: AppColors.darkCharcoalColor, borderRadius: BorderRadius.circular(20)),
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3),
+          decoration: BoxDecoration(color: AppColors.darkCharcoalColor, borderRadius: BorderRadius.circular(12)),
           child: content,
         ),
       ),
