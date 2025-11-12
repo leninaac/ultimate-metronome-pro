@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:ultimate_metronome_pro/design_system/dimens/app_dimens.dart';
 import 'package:ultimate_metronome_pro/design_system/strings/app_strings_portuguese.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/metronome/metronome_controller.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/timer/timer_controller.dart';
@@ -34,6 +35,10 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Modular.get<MetronomeController>();
     final timerController = Modular.get<TimerController>();
+    final screenSize = MediaQuery.of(context).size;
+    final smallerDimension = min(screenSize.width, screenSize.height);
+    final incrementButtonSize = smallerDimension * 0.12;
+    final textPadding = incrementButtonSize * 0.2;
 
     return AppBackgroundWidget(
       appBar: CustomAppBarWidget(appBarType: AppBarType.centeredTitle, title: AppStringsPortuguese.appName),
@@ -51,8 +56,7 @@ class HomePage extends StatelessWidget {
                 final n = controller.numerator.clamp(1, 16);
                 final activeIndex = controller.visualTickPosition;
 
-                // altura relativa reservada para o bloco de círculos (ajuste percentual se desejar)
-                final reservedHeightFactor = 0.12; // 12% da altura da tela, relativo e não absoluto
+                const reservedHeightFactor = 0.12;
 
                 return LayoutBuilder(
                   builder: (context, constraints) {
@@ -60,27 +64,23 @@ class HomePage extends StatelessWidget {
                     final reservedHeight = screenHeight * reservedHeightFactor;
 
                     return SizedBox(
-                      height: reservedHeight, // fixa a altura do bloco para não empurrar outros widgets
+                      height: reservedHeight,
                       child: Padding(
-                        // padding horizontal relativo à largura disponível
-                        padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.02),
+                        padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * AppDimens.beatIndicatorHorizontalPaddingFactor),
                         child: Row(
                           children: List.generate(n, (index) {
                             final isActive = index == activeIndex;
 
                             return Expanded(
                               child: Padding(
-                                // padding relativo entre itens (1% da largura total)
-                                padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * 0.04),
+                                padding: EdgeInsets.symmetric(horizontal: constraints.maxWidth * AppDimens.beatIndicatorItemPaddingFactor),
                                 child: Center(
                                   child: AspectRatio(
-                                    aspectRatio: 1, // garante área quadrada para o círculo
+                                    aspectRatio: 1,
                                     child: FractionallySizedBox(
-                                      widthFactor: isActive ? 0.75 : 0.65, // circulo ativo pode ser um pouco maior
-                                      heightFactor: isActive ? 0.75 : 0.65,
+                                      widthFactor: isActive ? AppDimens.activeBeatIndicatorSizeFactor : AppDimens.inactiveBeatIndicatorSizeFactor,
+                                      heightFactor: isActive ? AppDimens.activeBeatIndicatorSizeFactor : AppDimens.inactiveBeatIndicatorSizeFactor,
                                       child: CustomBeatWidget(
-                                        // remova 'size' do CustomBeatWidget para permitir preenchimento do pai,
-                                        // ou mantenha mas ele será ignorado se o widget não usa size.
                                         filled: isActive,
                                         color: Theme.of(context).colorScheme.onSurface,
                                       ),
@@ -125,42 +125,38 @@ class HomePage extends StatelessWidget {
                             tempoLabel: controller.getMusicalTempoFromBpm(controller.bpm),
                             isCountdownActive: timerController.isCountdownRunning,
                             isBpmChangeWarning: controller.isBpmChangeWarningActive,
-                            musicalSignature: '4/4',
+                            musicalSignature: '${controller.numerator}/${controller.denominator}',
                           );
                         },
                       ),
-                      SizedBox(height: constraints.maxHeight * 0.05),
-                      Observer(
-                        builder: (context) {
-                          return CustomCircularButtonWidget(
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            iconColor: Theme.of(context).colorScheme.onPrimary,
-                            icon: Icon(!controller.metronomeIsRunning ? Icons.play_arrow : Icons.stop),
-                            size: buttonSize,
-                            borderColor: Theme.of(context).colorScheme.onPrimary,
-                            borderWidth: 2,
-                            onPressed: () {
-                              if (!controller.metronomeIsRunning) {
-                                controller.startMetronome();
-                              } else {
-                                // 1. Parar Metrônomo
-                                controller.stopMetronome();
-
-                                // 2. Parar Stopwatch (Pause funciona como Stop/Pause)
-                                if (timerController.isStopwatchRunning) {
-                                  timerController.pauseStopwatch();
+                      SizedBox(height: constraints.maxHeight * AppDimens.playButtonMarginFactor),
+                      Center(
+                        child: Observer(
+                          builder: (context) {
+                            return CustomCircularButtonWidget(
+                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              iconColor: Theme.of(context).colorScheme.onPrimary,
+                              icon: Icon(!controller.metronomeIsRunning ? Icons.play_arrow : Icons.stop),
+                              size: buttonSize,
+                              borderColor: Theme.of(context).colorScheme.onPrimary,
+                              borderWidth: AppDimens.defaultBorderWidth,
+                              onPressed: () {
+                                if (!controller.metronomeIsRunning) {
+                                  controller.startMetronome();
+                                } else {
+                                  controller.stopMetronome();
+                                  if (timerController.isStopwatchRunning) {
+                                    timerController.pauseStopwatch();
+                                  }
+                                  if (timerController.isCountdownRunning) {
+                                    timerController.pauseCountdownTimer();
+                                    timerController.setTimerType(AppStringsPortuguese.undefined);
+                                  }
                                 }
-
-                                // 3. Parar Countdown (Pause funciona como Stop/Pause)
-                                if (timerController.isCountdownRunning) {
-                                  timerController.pauseCountdownTimer();
-                                  // Limpeza de estado: Recomendado para remover a flag de 'Countdown'
-                                  timerController.setTimerType('Indefinido');
-                                }
-                              }
-                            },
-                          );
-                        },
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ],
                   );
@@ -177,18 +173,18 @@ class HomePage extends StatelessWidget {
                     iconColor: Theme.of(context).colorScheme.onPrimary,
                     icon: FittedBox(
                       child: Padding(
-                        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+                        padding: EdgeInsets.all(textPadding),
                         child: Text(
-                          '-5',
+                          AppStringsPortuguese.decrementBpm,
                           style: AppTextStyles.appBarTitleTextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
                     ),
-                    size: MediaQuery.of(context).size.width * 0.10,
+                    size: incrementButtonSize,
                     borderColor: Theme.of(context).colorScheme.onPrimary,
-                    borderWidth: 2,
+                    borderWidth: AppDimens.defaultBorderWidth,
                     onPressed: () {
                       controller.setBpm(controller.bpm - 5);
                       if (controller.metronomeIsRunning) {
@@ -202,8 +198,8 @@ class HomePage extends StatelessWidget {
                       builder: (context) {
                         return Slider(
                           value: controller.bpm,
-                          min: 1,
-                          max: 300,
+                          min: AppDimens.minBpmSlider,
+                          max: AppDimens.maxBpmSlider,
                           label: controller.bpm.toInt().toString(),
                           onChanged: (double value) => controller.setBpm(value),
                           onChangeEnd: (double value) {
@@ -223,18 +219,18 @@ class HomePage extends StatelessWidget {
                     iconColor: Theme.of(context).colorScheme.onPrimary,
                     icon: FittedBox(
                       child: Padding(
-                        padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.02),
+                        padding: EdgeInsets.all(textPadding),
                         child: Text(
-                          '+5',
+                          AppStringsPortuguese.incrementBpm,
                           style: AppTextStyles.appBarTitleTextStyle(
                             color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
                     ),
-                    size: MediaQuery.of(context).size.width * 0.10,
+                    size: incrementButtonSize,
                     borderColor: Theme.of(context).colorScheme.onPrimary,
-                    borderWidth: 2,
+                    borderWidth: AppDimens.defaultBorderWidth,
                     onPressed: () {
                       controller.setBpm(controller.bpm + 5);
                       if (controller.metronomeIsRunning) {
@@ -249,7 +245,7 @@ class HomePage extends StatelessWidget {
 
             Card(
               color: Theme.of(context).cardColor,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppDimens.cardBorderRadius)),
               child: Padding(
                 padding: EdgeInsets.all(AppSpacing.medium(context)),
                 child: Column(
@@ -261,7 +257,7 @@ class HomePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Mudar BPM: ',
+                            AppStringsPortuguese.changeBpmLabel,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.regularTextStyle(color: Theme.of(context).colorScheme.onPrimary),
                           ),
@@ -287,13 +283,13 @@ class HomePage extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              'Compassos antes da mudança: ${controller.measuresToChange}',
+                              '${AppStringsPortuguese.measuresToChangeLabel}${controller.measuresToChange}',
                               style: AppTextStyles.regularTextStyle(color: Theme.of(context).colorScheme.onPrimary),
                             ),
                             Slider(
                               value: controller.measuresToChange.toDouble(),
-                              min: 1,
-                              max: 32,
+                              min: AppDimens.minMeasuresToChange,
+                              max: AppDimens.maxMeasuresToChange,
                               label: '${controller.measuresToChange}',
                               onChanged: (value) => controller.setMeasuresToChange(value.toInt()),
                               activeColor: Theme.of(context).colorScheme.onPrimary,
@@ -301,13 +297,13 @@ class HomePage extends StatelessWidget {
                             ),
                             SizedBox(height: AppSpacing.medium(context)),
                             Text(
-                              'Incremento de BPM: ${controller.bpmChangeValue.round()}',
+                              '${AppStringsPortuguese.bpmIncrementLabel}${controller.bpmChangeValue.round()}',
                               style: AppTextStyles.regularTextStyle(color: Theme.of(context).colorScheme.onPrimary),
                             ),
                             Slider(
                               value: controller.bpmChangeValue,
-                              min: -20,
-                              max: 20,
+                              min: AppDimens.minBpmChangeValue,
+                              max: AppDimens.maxBpmChangeValue,
                               label: '${controller.bpmChangeValue.round()}',
                               onChanged: controller.setBpmChangeValue,
                               activeColor: Theme.of(context).colorScheme.onPrimary,
@@ -361,14 +357,14 @@ class HomePage extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.001),
                       child: Text(
-                        'Cronômetro',
+                        AppStringsPortuguese.stopwatch,
                         style: AppTextStyles.regularTextStyle(color: Theme.of(context).colorScheme.onPrimary),
                       ),
                     ),
                   ),
                   size: MediaQuery.of(context).size.width * 0.10,
                   borderColor: Theme.of(context).colorScheme.onPrimary,
-                  borderWidth: 2,
+                  borderWidth: AppDimens.defaultBorderWidth,
                   onPressed:
                       () => showModalBottomSheet(
                         context: context,
@@ -388,14 +384,14 @@ class HomePage extends StatelessWidget {
                     child: Padding(
                       padding: EdgeInsets.all(MediaQuery.of(context).size.width * 0.001),
                       child: Text(
-                        'Countdown',
+                        AppStringsPortuguese.countdown,
                         style: AppTextStyles.regularTextStyle(color: Theme.of(context).colorScheme.onPrimary),
                       ),
                     ),
                   ),
                   size: MediaQuery.of(context).size.width * 0.10,
                   borderColor: Theme.of(context).colorScheme.onPrimary,
-                  borderWidth: 2,
+                  borderWidth: AppDimens.defaultBorderWidth,
                   onPressed:
                       () => showModalBottomSheet(
                         context: context,

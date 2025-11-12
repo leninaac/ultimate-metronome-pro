@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "77161053533",
+    "project_id": "ultimate-metronome-pro",
+    "storage_bucket": "ultimate-metronome-pro.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77161053533:android:20350b382095c869557cb4",
+        "android_client_info": {
+          "package_name": "br.com.lenin.canuto.ultimate_metronome_pro"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr6jjSafrd_SITyrnd-Go9FIFytik9lKw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
