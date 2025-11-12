@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ultimate_metronome_pro/design_system/dimens/app_dimens.dart';
+import 'package:ultimate_metronome_pro/design_system/strings/app_strings_portuguese.dart';
 import 'package:ultimate_metronome_pro/features/presenter/modules/metronome/metronome_controller.dart';
 import 'package:ultimate_metronome_pro/features/presenter/widgets/styles/app_text_styles.dart';
 import 'package:ultimate_metronome_pro/design_system/dimens/app_spacing.dart';
@@ -9,12 +11,12 @@ class CustomBpmModalContentWidget extends StatelessWidget {
 
   const CustomBpmModalContentWidget({super.key, required this.controller});
 
-  static const int minBpm = 20;
-  static const int maxBpm = 300;
-  static const int bpmRange = maxBpm - minBpm + 1;
-
   @override
   Widget build(BuildContext context) {
+    const minBpm = AppDimens.minBpmPicker;
+    const maxBpm = AppDimens.maxBpmPicker;
+    const bpmRange = maxBpm - minBpm + 1;
+
     // Calcula o índice inicial baseado no BPM atual, garantindo que esteja no range válido
     final initialBpm = controller.bpm.round().clamp(minBpm, maxBpm);
     final initialIndex = initialBpm - minBpm;
@@ -26,7 +28,7 @@ class CustomBpmModalContentWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            'BPM',
+            AppStringsPortuguese.bpmLabel,
             style: AppTextStyles.regularTextStyle(color: Theme.of(context).colorScheme.onPrimary),
           ),
           SizedBox(height: AppSpacing.small(context)),
@@ -71,7 +73,7 @@ class CustomBpmModalContentWidget extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child:  Text('Salvar', style: AppTextStyles.regularTextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+              child:  Text(AppStringsPortuguese.save, style: AppTextStyles.regularTextStyle(color: Theme.of(context).colorScheme.onPrimary)),
             ),
           ),
         ],
